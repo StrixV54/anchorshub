@@ -13,10 +13,23 @@ export default function Fill() {
   const [coins, setCoins] = useState(0);
   const [formData, setFormData] = useState(singleDetailObject);
   const router = useRouter();
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     if (coins > 0) toast("New Total Coin : " + coins);
   }, [coins]);
+
+  useEffect(() => {
+    if (typeof localStorage !== "undefined") {
+      const userRecord = localStorage.getItem("shortener-user");
+      if (!userRecord) {
+        router.push("/login");
+        return;
+      }
+      const parsedRecord = JSON.parse(userRecord);
+      setUser(parsedRecord);
+    }
+  }, []);
 
   const findTotalCoins = () => {
     let total = 0;
@@ -33,7 +46,15 @@ export default function Fill() {
     setFormData({ ...formData, [name]: value });
   };
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
+    try {
+      await fetch(process.env.NEXT_PUBLIC_BASE_URL + "/api/register", {
+        method: "POST",
+        body: JSON.stringify({ coins: coins, email: user?.email }),
+      });
+    } catch (error) {
+      console.log(error);
+    }
     toast.success("Successfully added details.");
     setTimeout(() => router.push("/dashboard"), 800);
   };
