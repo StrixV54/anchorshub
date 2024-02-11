@@ -1,5 +1,5 @@
 import nodemailer from "nodemailer";
-import Cryptr from "cryptr";
+import StringCrypto from "string-crypto";
 
 export async function POST(request) {
   const MAIL_SETTINGS = {
@@ -18,8 +18,8 @@ export async function POST(request) {
     const { name, email, otp } = await request.json();
     const transporter = nodemailer.createTransport(MAIL_SETTINGS);
 
-    const cryptr = new Cryptr(process.env.NEXT_PUBLIC_CRYPT);
-    const decodedOTP = cryptr.decrypt(otp);
+    const { decryptString } = new StringCrypto();
+    const decodedOTP = decryptString(otp, process.env.NEXT_PUBLIC_CRYPT);
 
     let info = await transporter.sendMail({
       from: MAIL_SETTINGS.auth.user,

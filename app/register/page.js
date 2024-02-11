@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { generateOTP } from "@eternaljs/otp-generator";
-import Cryptr from "cryptr";
+import StringCrypto from "string-crypto";
 
 export default function Register() {
   const router = useRouter();
@@ -27,7 +27,7 @@ export default function Register() {
 
   const sendOtp = async () => {
     const otp = generateOTP(6);
-    const cryptr = new Cryptr("myTotallySecretKey");
+    const { encryptString } = new StringCrypto();
     if (formData.email.length > 0) {
       const response = await fetch(
         process.env.NEXT_PUBLIC_BASE_URL + "/api/sendotp",
@@ -35,7 +35,7 @@ export default function Register() {
           method: "POST",
           body: JSON.stringify({
             ...formData,
-            otp: cryptr.encrypt(process.env.NEXT_PUBLIC_CRYPT),
+            otp: encryptString(otp, process.env.NEXT_PUBLIC_CRYPT),
           }),
         }
       );
@@ -98,7 +98,7 @@ export default function Register() {
   useEffect(() => {
     if (isLogged) {
       setTimeout(() => {
-        router.push("/dashboard");
+        router.push("/fill");
       }, 1400);
     }
   }, [isLogged]);
