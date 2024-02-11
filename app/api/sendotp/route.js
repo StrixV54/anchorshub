@@ -14,7 +14,7 @@ export async function POST(request) {
   };
 
   try {
-    const { name, email } = await request.json();
+    const { name, email, otp } = await request.json();
     const transporter = nodemailer.createTransport(MAIL_SETTINGS);
 
     let info = await transporter.sendMail({

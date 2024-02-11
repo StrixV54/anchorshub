@@ -5,7 +5,7 @@ import UserSchema from "@/mongodb/userSchema";
 export async function POST(request) {
   try {
     await connectDB();
-    const { id, userId, jobdetails } = await request.json();
+    const { id, userId, email, jobdetails } = await request.json();
 
     let res = await AppliedSchema.findOne({ id, userId });
 
@@ -13,20 +13,25 @@ export async function POST(request) {
       return new Response(JSON.stringify({ message: "Job already applied." }), {
         status: 400,
       });
-    let user = await UserSchema.findOne({ id, userId });
+    let user = await UserSchema.findOne({ email });
     if (user?.coin >= 50)
-      await UserSchema.updateOne({ email }, { $dec: { coins: coins - 50 } });
+      await UserSchema.updateOne({ email }, { $inc: { coin: -50 } });
     else {
-      return new Response(JSON.stringify({ message: "No Coins Left." }), {
-        status: 400,
-      });
+      return new Response(
+        JSON.stringify({
+          message: "Oops! You don't have sufficient balance",
+        }),
+        {
+          status: 400,
+        }
+      );
     }
 
-    res = new AppliedSchema({ id, userId, ...jobdetails });
+    res = new AppliedSchema({ id, email, userId, ...jobdetails });
     await res.save();
 
     return Response.json({
-      message: "Successfully created the record.",
+      message: "Applied Successfully",
     });
   } catch (error) {
     console.error(error);

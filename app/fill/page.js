@@ -48,7 +48,7 @@ export default function Fill() {
 
   const onSubmit = async () => {
     try {
-      await fetch(process.env.NEXT_PUBLIC_BASE_URL + "/api/register", {
+      await fetch(process.env.NEXT_PUBLIC_BASE_URL + "/api/coin", {
         method: "POST",
         body: JSON.stringify({ coins: coins, email: user?.email }),
       });

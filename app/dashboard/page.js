@@ -59,6 +59,7 @@ export default function Home() {
       body: JSON.stringify({
         id: job.id,
         userId: user?.userId,
+        email: user?.email,
         jobdetails: job,
       }),
     });
@@ -70,6 +71,8 @@ export default function Home() {
     toast.success("Applied");
     window.location.reload();
   };
+
+  console.log(applied, list);
 
   return (
     <>
