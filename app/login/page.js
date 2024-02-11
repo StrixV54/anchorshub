@@ -68,7 +68,7 @@ export default function Login() {
 
   useEffect(() => {
     if (isLogged) {
-      router.push("/dashboard");
+      router.push("/fill");
     }
   }, [isLogged]);
 

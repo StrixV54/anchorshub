@@ -39,12 +39,13 @@ export default function Home() {
       }
       const parsedRecord = JSON.parse(userRecord);
       setUser(parsedRecord);
-      fetchAllJobsAPI()
+      const apiPromise = Promise.all([
+        fetchAllJobsAPI(),
+        fetchAppliedJobsAPI(parsedRecord?.userId),
+      ])
         .then((res) => {
-          setList(res?.list);
-          fetchAppliedJobsAPI(parsedRecord?.userId)
-            .then((res) => setApplied(res?.list))
-            .catch((err) => console.log("Error ", err));
+          setList(res[0]?.list);
+          setApplied(res[1]?.list);
         })
         .catch((err) => console.log("Error ", err))
         .finally(() => setLoading(false));
@@ -76,7 +77,6 @@ export default function Home() {
     toast.success("Applied Successfully");
     setTimeout(() => window.location.reload(), 1000);
   };
-
 
   return (
     <>
