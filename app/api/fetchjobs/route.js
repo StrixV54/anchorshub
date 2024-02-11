@@ -11,7 +11,7 @@ export async function GET(request) {
       url: "https://linkedin-jobs-scraper-api.p.rapidapi.com/jobs",
       headers: {
         "content-type": "application/json",
-        "X-RapidAPI-Key": "6b32f92af5msh45d3c1e32c983e3p1ccfeejsn57c31b1055bf",
+        "X-RapidAPI-Key": "6b32f92af5msh45d3c1e32c983e3p1ccfeejsn57c31b1055bf", //openly available so safe to place keys here
         "X-RapidAPI-Host": "linkedin-jobs-scraper-api.p.rapidapi.com",
       },
       data: {
@@ -22,15 +22,6 @@ export async function GET(request) {
     };
 
     const response = await axios.request(options);
-    // const {
-    //   experienceLevel,
-    //   title,
-    //   salary,
-    //   companyName,
-    //   url,
-    //   publishedAt,
-    //   id,
-    // } = response.data;
 
     await JobSchema.create(response.data);
 

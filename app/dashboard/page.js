@@ -53,6 +53,11 @@ export default function Home() {
 
   if (loading) return <Loading isFullScreen={true} />;
 
+  const fetchNewJob = async () => {
+    const data = await fetch(`${BASE_URL}/api/fetchjobs`);
+    setTimeout(() => window.location.reload(), 1000);
+  };
+
   const applyJob = async (job) => {
     const data = await fetch(`${BASE_URL}/api/savejob`, {
       method: "POST",
@@ -68,11 +73,10 @@ export default function Home() {
       toast.error(res?.message);
       return;
     }
-    toast.success("Applied");
-    window.location.reload();
+    toast.success("Applied Successfully");
+    setTimeout(() => window.location.reload(), 1000);
   };
 
-  console.log(applied, list);
 
   return (
     <>
@@ -96,7 +100,12 @@ export default function Home() {
             </div>
           ))}
         </div>
-        <div className="text-2xl mt-[100px]">Applied Jobs</div>
+        <div className="text-2xl mt-[100px]">
+          All Jobs
+          <button className="btn btn-secondary ml-2" onClick={fetchNewJob}>
+            Fetch New Jobs
+          </button>
+        </div>
         <div className="flex flex-wrap gap-6">
           {list?.map((item, idx) => (
             <div

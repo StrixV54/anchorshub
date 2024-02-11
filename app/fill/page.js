@@ -69,7 +69,10 @@ export default function Fill() {
         </div>
       </div>
       <div>Fill the below fields to start looking for jobs :</div>
-      <form className="flex flex-col gap-6" onSubmit={onSubmit}>
+      <form
+        className="flex flex-col gap-6"
+        // onSubmit={onSubmit}
+      >
         <div className="flex flex-col gap-8">
           {Object.keys(fieldSectionData).map((key, idx) => (
             <div key={idx}>
@@ -93,6 +96,7 @@ export default function Fill() {
         </div>
         <button
           type="submit"
+          onClick={onSubmit}
           className="btn btn-primary my-6 text-white bg-[#4a58f1] border-none max-w-[400px]"
         >
           Save Info

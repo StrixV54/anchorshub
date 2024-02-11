@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import Cryptr from "cryptr";
 
 export async function POST(request) {
   const MAIL_SETTINGS = {
@@ -17,6 +18,9 @@ export async function POST(request) {
     const { name, email, otp } = await request.json();
     const transporter = nodemailer.createTransport(MAIL_SETTINGS);
 
+    const cryptr = new Cryptr(process.env.NEXT_PUBLIC_CRYPT);
+    const decodedOTP = cryptr.decrypt(otp);
+
     let info = await transporter.sendMail({
       from: MAIL_SETTINGS.auth.user,
       to: email,
@@ -29,7 +33,7 @@ export async function POST(request) {
         <h2>Welcome to the club.</h2>
         <h4>You are officially In ✔</h4>
         <p style="margin-bottom: 30px;">Pleas enter the sign up OTP to get started</p>
-        <h1 style="font-size: 40px; letter-spacing: 2px; text-align:center;">${otp}</h1>
+        <h1 style="font-size: 40px; letter-spacing: 2px; text-align:center;">${decodedOTP}</h1>
       </div>
     `,
     });

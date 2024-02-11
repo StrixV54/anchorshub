@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { generateOTP } from "@eternaljs/otp-generator";
+import Cryptr from "cryptr";
 
 export default function Register() {
   const router = useRouter();
@@ -26,16 +27,19 @@ export default function Register() {
 
   const sendOtp = async () => {
     const otp = generateOTP(6);
+    const cryptr = new Cryptr("myTotallySecretKey");
     if (formData.email.length > 0) {
       const response = await fetch(
         process.env.NEXT_PUBLIC_BASE_URL + "/api/sendotp",
         {
           method: "POST",
-          body: JSON.stringify({ ...formData, otp }),
+          body: JSON.stringify({
+            ...formData,
+            otp: cryptr.encrypt(process.env.NEXT_PUBLIC_CRYPT),
+          }),
         }
       );
       toast.success("Send OTP to your mail");
-      console.log(response);
       setGenerateOtp(otp);
     }
   };
@@ -43,7 +47,6 @@ export default function Register() {
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(generatedOTP, " ** ", formData.otp);
     if (generatedOTP !== formData.otp) {
       toast.error("Wrong OTP");
       return;
